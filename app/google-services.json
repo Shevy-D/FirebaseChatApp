@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "39597418911",
+    "project_id": "fir-chatapp-e147f",
+    "storage_bucket": "fir-chatapp-e147f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39597418911:android:d096c7248255a0a78ff5aa",
+        "android_client_info": {
+          "package_name": "com.shevy.firebasechatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "39597418911-j2eniv785p4jsvuf88rfdoc98mse86rr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjv5IHySybjoDxBou8_P1ZjrPBafryG3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "39597418911-j2eniv785p4jsvuf88rfdoc98mse86rr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
