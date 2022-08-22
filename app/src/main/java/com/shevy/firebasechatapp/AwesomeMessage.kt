@@ -1,12 +1,10 @@
 package com.shevy.firebasechatapp
 
-class AwesomeMessage(
+data class AwesomeMessage(
     var text: String?,
     var name: String?,
-    var imageUrl: String?,
+    var imageUrl: String?/*,
     var sender: String?,
     var recipient: String?,
-    var isMine: Boolean
-) {
-
-}
+    var isMine: Boolean*/
+)
