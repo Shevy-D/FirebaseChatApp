@@ -7,6 +7,10 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.shevy.firebasechatapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,10 +25,22 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userName: String
 
+    lateinit var database: FirebaseDatabase
+    lateinit var messagesDatabaseReference: DatabaseReference
+    lateinit var usersDatabaseReference: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        database = Firebase.database
+        messagesDatabaseReference = database.reference.child("messages")
+        usersDatabaseReference = database.reference.child("users")
+
+        messagesDatabaseReference.child("message1").setValue("Hello Firebase")
+        messagesDatabaseReference.child("message2").setValue("Hello world")
+        usersDatabaseReference.child("user1").setValue("Joe")
 
         userName = "Default User"
         progressBar = binding.progressBar
