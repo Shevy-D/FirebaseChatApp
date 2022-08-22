@@ -1,14 +1,12 @@
 package com.shevy.firebasechatapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.*
-import androidx.core.widget.addTextChangedListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.shevy.firebasechatapp.databinding.ActivityMainBinding
@@ -27,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var database: FirebaseDatabase
     lateinit var messagesDatabaseReference: DatabaseReference
+    lateinit var messagesChildEventListener: ChildEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,10 +79,29 @@ class MainActivity : AppCompatActivity() {
         }
         sendImageButton.setOnClickListener {
 
-
-
         }
 
+        messagesChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val message: AwesomeMessage? = snapshot.getValue(AwesomeMessage::class.java)
+
+                adapter.add(message)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        }
+
+        messagesDatabaseReference.addChildEventListener(messagesChildEventListener)
     }
 
 }
