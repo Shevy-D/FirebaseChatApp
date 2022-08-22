@@ -20,7 +20,6 @@ class AwesomeMessageAdapter(context: Context, resource: Int, messages: List<Awes
         val photoImageView: ImageView = view.findViewById(R.id.photoImageView)
         val nameView: TextView = view.findViewById(R.id.nameTextView)
         val textView: TextView = view.findViewById(R.id.textTextView)
-
         val message: AwesomeMessage? = getItem(position)
 
         val isText: Boolean = message?.imageUrl == null
