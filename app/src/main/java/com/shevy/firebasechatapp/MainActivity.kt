@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var database: FirebaseDatabase
     lateinit var messagesDatabaseReference: DatabaseReference
-    lateinit var usersDatabaseReference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         database = Firebase.database
         messagesDatabaseReference = database.reference.child("messages")
-        usersDatabaseReference = database.reference.child("users")
 
-        messagesDatabaseReference.child("message1").setValue("Hello Firebase")
+/*         messagesDatabaseReference.child("message1").setValue("Hello Firebase")
         messagesDatabaseReference.child("message2").setValue("Hello world")
-        usersDatabaseReference.child("user1").setValue("Joe")
+        usersDatabaseReference.child("user1").setValue("Joe")*/
 
         userName = "Default User"
         progressBar = binding.progressBar
@@ -70,9 +68,19 @@ class MainActivity : AppCompatActivity() {
             filters = arrayOf<InputFilter>(InputFilter.LengthFilter(500))
         }
         sendMessageButton.setOnClickListener {
+            val message: AwesomeMessage = AwesomeMessage()
+            message.apply {
+                text = messageEditText.text.toString()
+                name = userName
+                imageUrl = null
+            }
+            messagesDatabaseReference.push().setValue(message)
+
             messageEditText.text = ""
         }
         sendImageButton.setOnClickListener {
+
+
 
         }
 
