@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
             messageEditText.text = ""
         }
         sendImageButton.setOnClickListener {
-
         }
 
         messagesChildEventListener = object : ChildEventListener {
