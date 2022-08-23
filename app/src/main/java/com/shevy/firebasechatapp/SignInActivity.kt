@@ -1,5 +1,6 @@
 package com.shevy.firebasechatapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -20,13 +21,13 @@ class SignInActivity : AppCompatActivity() {
     lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
 
-    private val usersDatabaseReference: DatabaseReference? = null
-
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
+    private lateinit var repeatPasswordEditText: EditText
     private lateinit var nameEditText: EditText
     private lateinit var toggleLoginSignUpTextView: TextView
     private lateinit var loginSignUpButton: Button
+    private var loginModeIsActive: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,7 @@ class SignInActivity : AppCompatActivity() {
 
         emailEditText = binding.emailEditText
         passwordEditText = binding.passwordEditText
+        repeatPasswordEditText = binding.repeatPasswordEditText
         nameEditText = binding.nameEditText
         toggleLoginSignUpTextView = binding.toggleLoginSignUpTextView
         loginSignUpButton = binding.loginSignUpButton
@@ -46,6 +48,19 @@ class SignInActivity : AppCompatActivity() {
                 emailEditText.text.toString().trim(),
                 passwordEditText.text.toString().trim()
             )
+        }
+
+        toggleLoginSignUpTextView.setOnClickListener {
+            if (loginModeIsActive) {
+                loginModeIsActive = false
+                loginSignUpButton.text = "Sign Up"
+                toggleLoginSignUpTextView.text = "Tap to log in"
+            } else {
+                loginModeIsActive = true
+                loginSignUpButton.text = "Log In"
+                toggleLoginSignUpTextView.text = "Tap to sign up"
+            }
+
         }
     }
 
@@ -61,11 +76,12 @@ class SignInActivity : AppCompatActivity() {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     Toast.makeText(
-                        this@SignInActivity, "Authentication failed.",
+                        this, "Authentication failed.",
                         Toast.LENGTH_SHORT
                     ).show()
                     //updateUI(null)
                 }
             }
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

@@ -29,13 +29,13 @@
         android:hint="Your Password"
         android:inputType="textPassword" />
 
-<!--    <EditText
+    <EditText
         android:id="@+id/repeatPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Confirm Password"
-        android:inputType="textPassword" />-->
+        android:inputType="textPassword" />
 
     <EditText
         android:id="@+id/nameEditText"
