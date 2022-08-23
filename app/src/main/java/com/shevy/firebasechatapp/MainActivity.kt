@@ -1,18 +1,29 @@
 package com.shevy.firebasechatapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.shevy.firebasechatapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
+    private val RC_IMAGE_PICKER = 123
 
     private lateinit var messageListView: ListView
     private lateinit var adapter: AwesomeMessageAdapter
@@ -27,19 +38,29 @@ class MainActivity : AppCompatActivity() {
     lateinit var messagesDatabaseReference: DatabaseReference
     lateinit var messagesChildEventListener: ChildEventListener
 
+    lateinit var usersDatabaseReference: DatabaseReference
+    lateinit var usersChildEventListener: ChildEventListener
+    lateinit var storage: FirebaseStorage
+    lateinit var chatImageStorageReference: StorageReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         database = Firebase.database
+        storage = Firebase.storage
+
         messagesDatabaseReference = database.reference.child("messages")
+        usersDatabaseReference = database.reference.child("users")
+        chatImageStorageReference = storage.reference.child("chat_images")
 
 /*         messagesDatabaseReference.child("message1").setValue("Hello Firebase")
         messagesDatabaseReference.child("message2").setValue("Hello world")
         usersDatabaseReference.child("user1").setValue("Joe")*/
 
-        userName = "Default User"
+        userName = intent.getStringExtra("userName") ?: "Default User"
+
         progressBar = binding.progressBar
         sendImageButton = binding.sendPhotoButton
         sendMessageButton = binding.sendMessageButton
@@ -78,7 +99,40 @@ class MainActivity : AppCompatActivity() {
             messageEditText.text = ""
         }
         sendImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.apply {
+                type = "image/*"
+                putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            }
+
+/*            if(intent.resolveActivity(packageManager) != null) {
+                startActivityForResult(Intent.createChooser(intent, "Choose an image"), RC_IMAGE_PICKER)
+            }*/
+            startActivityForResult(Intent.createChooser(intent, "Choose an image"), RC_IMAGE_PICKER)
         }
+
+        usersChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val user: User? = snapshot.getValue(User::class.java)
+
+                if (user?.id == FirebaseAuth.getInstance().currentUser?.uid) {
+                    userName = user?.name.toString()
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        }
+        usersDatabaseReference.addChildEventListener(usersChildEventListener)
 
         messagesChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -99,8 +153,34 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
             }
         }
-
         messagesDatabaseReference.addChildEventListener(messagesChildEventListener)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.sign_out -> {
+                Firebase.auth.signOut()
+                startActivity(Intent(this, SignInActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_IMAGE_PICKER && resultCode == RESULT_OK) {
+            val selectedImageUri: Uri? = data?.data
+            val imageReference = chatImageStorageReference
+                .child(selectedImageUri?.lastPathSegment.toString())
+
+        }
     }
 
 }
