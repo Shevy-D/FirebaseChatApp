@@ -22,7 +22,7 @@ import com.shevy.firebasechatapp.databinding.ActivitySignInBinding
 class SignInActivity : AppCompatActivity() {
     private val TAG = "SignInActivity"
 
-    lateinit var binding: ActivitySignInBinding
+    private lateinit var binding: ActivitySignInBinding
     private lateinit var auth: FirebaseAuth
 
     private lateinit var emailEditText: EditText
@@ -33,8 +33,8 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var loginSignUpButton: Button
     private var loginModeIsActive: Boolean = false
 
-    lateinit var database: FirebaseDatabase
-    lateinit var usersDatabaseReference: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var usersDatabaseReference: DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

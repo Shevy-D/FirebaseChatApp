@@ -33,13 +33,16 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var userName: String
 
-    lateinit var database: FirebaseDatabase
-    lateinit var messagesDatabaseReference: DatabaseReference
-    lateinit var messagesChildEventListener: ChildEventListener
-    lateinit var usersDatabaseReference: DatabaseReference
-    lateinit var usersChildEventListener: ChildEventListener
-    lateinit var storage: FirebaseStorage
-    lateinit var chatImageStorageReference: StorageReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var messagesDatabaseReference: DatabaseReference
+    private lateinit var messagesChildEventListener: ChildEventListener
+    private lateinit var usersDatabaseReference: DatabaseReference
+    private lateinit var usersChildEventListener: ChildEventListener
+    private lateinit var storage: FirebaseStorage
+    private lateinit var chatImageStorageReference: StorageReference
+    private lateinit var auth: FirebaseAuth
+
+    private lateinit var recipientUserId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,12 @@ class ChatActivity : AppCompatActivity() {
 
         database = Firebase.database
         storage = Firebase.storage
+        auth = Firebase.auth
+
+        if (intent != null) {
+            recipientUserId = intent.getStringExtra("recipientUserId").toString()
+            userName = intent.getStringExtra("userName") ?: "Default User"
+        }
 
         messagesDatabaseReference = database.reference.child("messages")
         usersDatabaseReference = database.reference.child("users")
@@ -56,8 +65,6 @@ class ChatActivity : AppCompatActivity() {
 /*         messagesDatabaseReference.child("message1").setValue("Hello Firebase")
         messagesDatabaseReference.child("message2").setValue("Hello world")
         usersDatabaseReference.child("user1").setValue("Joe")*/
-
-        userName = intent.getStringExtra("userName") ?: "Default User"
 
         progressBar = binding.progressBar
         sendImageButton = binding.sendPhotoButton
@@ -91,6 +98,8 @@ class ChatActivity : AppCompatActivity() {
                 text = messageEditText.text.toString()
                 name = userName
                 imageUrl = null
+                sender = auth.currentUser?.uid ?: "Default Name"
+                recipient = recipientUserId
             }
             messagesDatabaseReference.push().setValue(message)
 
@@ -136,7 +145,13 @@ class ChatActivity : AppCompatActivity() {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val message: AwesomeMessage? = snapshot.getValue(AwesomeMessage::class.java)
 
-                adapter.add(message)
+                if (message?.sender == auth.currentUser?.uid
+                    && message?.recipient == recipientUserId
+                    || message?.recipient == auth.currentUser?.uid
+                    && message?.sender == recipientUserId
+                ) {
+                    adapter.add(message)
+                }
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -194,6 +209,8 @@ class ChatActivity : AppCompatActivity() {
                     message.apply {
                         imageUrl = downloadUri.toString()
                         name = userName
+                        sender = auth.currentUser?.uid ?: "Default Name"
+                        recipient = recipientUserId
                         messagesDatabaseReference.push().setValue(message)
                     }
                 } else {

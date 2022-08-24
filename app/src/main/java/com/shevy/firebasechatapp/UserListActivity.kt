@@ -17,7 +17,7 @@ import com.shevy.firebasechatapp.databinding.ActivityUserListBinding
 
 
 class UserListActivity : AppCompatActivity() {
-    lateinit var binding: ActivityUserListBinding
+    private lateinit var binding: ActivityUserListBinding
 
     private lateinit var userDatabaseReference: DatabaseReference
     private var userChildEventListener: ChildEventListener? = null
@@ -36,6 +36,7 @@ class UserListActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        userName = intent.getStringExtra("userName").toString()
         userArrayList = ArrayList()
 
         buildRecyclerView()
@@ -85,15 +86,15 @@ class UserListActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@UserListActivity)
             userAdapter = UserAdapter(userArrayList, object : UserAdapter.OnUserClickListener {
                 override fun onUserClick(position: Int) {
-                    getToChat(position)
+                    goToChat(position)
                 }
             })
             adapter = userAdapter
         }
     }
 
-    private fun getToChat(position: Int) {
-        val intent = Intent(this@UserListActivity, ChatActivity::class.java)
+    private fun goToChat(position: Int) {
+        val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("recipientUserId", userArrayList[position].id)
         intent.putExtra("recipientUserName", userArrayList[position].name)
         intent.putExtra("userName", userName)
