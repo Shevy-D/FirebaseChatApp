@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -83,6 +84,7 @@ class UserListActivity : AppCompatActivity() {
         })*/
         binding.userListRecyclerView.apply {
             setHasFixedSize(true)
+            addItemDecoration( DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
             layoutManager = LinearLayoutManager(this@UserListActivity)
             userAdapter = UserAdapter(userArrayList, object : UserAdapter.OnUserClickListener {
                 override fun onUserClick(position: Int) {

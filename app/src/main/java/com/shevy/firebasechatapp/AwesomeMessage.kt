@@ -6,5 +6,5 @@ class AwesomeMessage {
     var imageUrl: String? = null
     var sender: String = ""
     var recipient: String = ""
-    //var isMine: Boolean = true
+    var isMine: Boolean = false
 }

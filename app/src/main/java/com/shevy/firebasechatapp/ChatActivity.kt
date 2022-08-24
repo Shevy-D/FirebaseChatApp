@@ -32,6 +32,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageEditText: TextView
 
     private lateinit var userName: String
+    private lateinit var recipientUserName: String
 
     private lateinit var database: FirebaseDatabase
     private lateinit var messagesDatabaseReference: DatabaseReference
@@ -56,7 +57,10 @@ class ChatActivity : AppCompatActivity() {
         if (intent != null) {
             recipientUserId = intent.getStringExtra("recipientUserId").toString()
             userName = intent.getStringExtra("userName") ?: "Default User"
+            recipientUserName = intent.getStringExtra("recipientUserName").toString()
         }
+
+        supportActionBar?.title = "Chat with $recipientUserName"
 
         messagesDatabaseReference = database.reference.child("messages")
         usersDatabaseReference = database.reference.child("users")
@@ -147,9 +151,13 @@ class ChatActivity : AppCompatActivity() {
 
                 if (message?.sender == auth.currentUser?.uid
                     && message?.recipient == recipientUserId
-                    || message?.recipient == auth.currentUser?.uid
+                ) {
+                    message.isMine = true
+                    adapter.add(message)
+                } else if (message?.recipient == auth.currentUser?.uid
                     && message?.sender == recipientUserId
                 ) {
+                    message.isMine = false
                     adapter.add(message)
                 }
             }
