@@ -180,7 +180,28 @@ class MainActivity : AppCompatActivity() {
             val imageReference = chatImageStorageReference
                 .child(selectedImageUri?.lastPathSegment.toString())
 
+            val uploadTask = selectedImageUri?.let { imageReference.putFile(it) }
+
+            uploadTask?.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                imageReference.downloadUrl
+            }?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    val message = AwesomeMessage()
+                    message.apply {
+                        imageUrl = downloadUri.toString()
+                        name = userName
+                        messagesDatabaseReference.push().setValue(message)
+                    }
+                } else {
+
+                }
+            }
         }
     }
-
 }
