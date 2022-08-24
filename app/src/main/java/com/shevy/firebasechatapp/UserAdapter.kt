@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class UserAdapter(private val users: ArrayList<User>, private var listener: OnUserClickListener) :
+class UserAdapter(private val users: ArrayList<User>, private var listener: OnUserClickListener?) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(

@@ -154,7 +154,7 @@ class ChatActivity : AppCompatActivity() {
         messagesDatabaseReference.addChildEventListener(messagesChildEventListener)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
