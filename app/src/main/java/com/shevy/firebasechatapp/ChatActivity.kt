@@ -18,11 +18,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.shevy.firebasechatapp.databinding.ActivityMainBinding
+import com.shevy.firebasechatapp.databinding.ActivityChatBinding
 
-class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
-
+class ChatActivity : AppCompatActivity() {
+    lateinit var binding: ActivityChatBinding
     private val RC_IMAGE_PICKER = 123
 
     private lateinit var messageListView: ListView
@@ -37,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var database: FirebaseDatabase
     lateinit var messagesDatabaseReference: DatabaseReference
     lateinit var messagesChildEventListener: ChildEventListener
-
     lateinit var usersDatabaseReference: DatabaseReference
     lateinit var usersChildEventListener: ChildEventListener
     lateinit var storage: FirebaseStorage
@@ -45,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         database = Firebase.database

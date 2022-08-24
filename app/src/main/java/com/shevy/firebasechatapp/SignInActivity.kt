@@ -76,7 +76,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         if (auth.currentUser != null) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, ChatActivity::class.java))
         }
     }
 
@@ -101,7 +101,7 @@ class SignInActivity : AppCompatActivity() {
                             val user = auth.currentUser
                             //updateUI(user)
 
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, ChatActivity::class.java)
                             intent.putExtra("userName", nameEditText.text.toString().trim())
                             startActivity(intent)
                         } else {
@@ -141,7 +141,7 @@ class SignInActivity : AppCompatActivity() {
                             user?.let { createUser(it) }
                             //updateUI(user)
 
-                            val intent = Intent(this, MainActivity::class.java)
+                            val intent = Intent(this, ChatActivity::class.java)
                             intent.putExtra("userName", nameEditText.text.toString().trim())
                             startActivity(intent)
                         } else {
